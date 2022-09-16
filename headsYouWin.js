@@ -1,9 +1,5 @@
 playerOne = "You"
 playerTwo = "Computer"
-noOfTosses = 10
-tossDelay = 1000 // In milliseconds
-roundDelay = 5000 // In milliseconds
-noOfRounds = 4
 
 var gameDetails = []
 var pointsOfPlayerOne = 0
@@ -11,7 +7,7 @@ var pointsOfPlayerTwo = 0
 
 roundCount = 0
 roundInterval = setInterval(function makeMatch() {
-    if (roundCount++ == noOfRounds) {
+    if (roundCount++ == 4) {
         showTheFinalWinner()
         console.table(gameDetails)
         clearInterval(roundInterval)
@@ -19,7 +15,7 @@ roundInterval = setInterval(function makeMatch() {
         tossCount = 0
         console.log(`\nRound : ${roundCount} >>>>`)
         tossCoin = setInterval(() => {
-            if (tossCount++ == noOfTosses) {
+            if (tossCount++ == 10) {
                 console.table([{ round: roundCount, pointsOfPlayerOne: pointsOfPlayerOne, pointsOfPlayerTwo: pointsOfPlayerTwo }])
                 console.log("------------------------------------------------------------------------------")
                 clearInterval(tossCoin)
@@ -44,11 +40,11 @@ roundInterval = setInterval(function makeMatch() {
                     pointsOfPlayerTwo: pointsOfPlayerTwo
                 })
             }
-        }, tossDelay)
+        }, 1000)
         console.log(`\n`)
         return makeMatch
     }
-}(), roundDelay + (noOfTosses * tossDelay));
+}(), 15000);
 
 
 // Function for showing the winner 
