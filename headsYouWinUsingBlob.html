@@ -1,34 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-
 <body>
     <script>
         playerOne = "You"
         playerTwo = "Computer"
+        const noOfTosses = 10
+        const noOfRounds = 4
+        const tossDelay = 1000 // In milliseconds
+        const roundDelay = 5000 // In milliseconds
 
-        var gameDetails = []
+        var gameDetails = []   // Array of object has each toss data
         var pointsOfPlayerOne = 0
         var pointsOfPlayerTwo = 0
 
         roundCount = 0
         roundInterval = setInterval(function makeMatch() {
-            if (roundCount++ == 4) {
-                showTheFinalWinner()
+            if (roundCount++ == noOfRounds) {
+                showTheFinalWinner()  // Print the winner of the round on console at the end of the match
                 console.table(gameDetails)
-                makeExelSheet(gameDetails)
+                makeExelSheet(gameDetails)  // A function which prepares and downloads csv file of the game data 
                 clearInterval(roundInterval)
             } else {
                 tossCount = 0
                 console.log(`\nRound : ${roundCount} >>>>`)
                 tossCoin = setInterval(() => {
-                    if (tossCount++ == 10) {
+                    if (tossCount++ == noOfTosses) {
                         console.table([{ round: roundCount, pointsOfPlayerOne: pointsOfPlayerOne, pointsOfPlayerTwo: pointsOfPlayerTwo }])
                         console.log("------------------------------------------------------------------------------")
                         clearInterval(tossCoin)
@@ -53,15 +55,14 @@
                             pointsOfPlayerTwo: pointsOfPlayerTwo
                         })
                     }
-                }, 1000)
+                }, tossDelay)
                 console.log(`\n`)
                 return makeMatch
             }
-        }(), 15000);
+        }(), roundDelay + (noOfTosses * tossDelay));
 
 
         // Function for showing the winner 
-
         function showTheFinalWinner() {
             console.log(`Final Result :\n`)
             if (pointsOfPlayerOne > pointsOfPlayerTwo) {
@@ -73,17 +74,14 @@
             }
             console.log("------------------------------------------------------------------------------\n")
         }
-
         // Function for creating blob
-
         function makeExelSheet(finalGameDetailsList) {
             stringOfData = ""
             stringOfData += "Round,Toss,Player one got,Player two got,points Of PlayerOne,Points of playerTwo"
             stringOfData += "\r\n"
             count = 1
-            //increment = .1
             for (roundDetails of finalGameDetailsList) {
-                if (count % 10 == 0) {
+                if (count % noOfTosses == 0) {
                     stringOfData += roundDetails.round + "," + roundDetails.toss + "," + roundDetails.playerOneGot + "," + roundDetails.playerTwoGot + "," + roundDetails.pointsOfPlayerOne + "," + roundDetails.pointsOfPlayerTwo
                     stringOfData += "\r\n"
                     if (roundDetails.pointsOfPlayerOne > roundDetails.pointsOfPlayerTwo) {
@@ -102,21 +100,16 @@
                     stringOfData += "\r\n"
                 }
                 count++
-                //increment += .1
             }
-
             let tossBlob = new Blob([stringOfData], { type: "text/csv" })
             let tossURL = window.URL.createObjectURL(tossBlob)
             let activation = document.createElement("a")
             activation.href = tossURL
-
             activation.download = 'headsYouWin.csv'
-
             activation.click()
             window.URL.revokeObjectURL(tossURL)
             activation.remove()
         }
     </script>
 </body>
-
 </html>
